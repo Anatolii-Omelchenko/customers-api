@@ -1,5 +1,6 @@
 package tech.theraven.customers_api.exceptions;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
@@ -11,6 +12,7 @@ import org.springframework.web.method.annotation.MethodArgumentTypeMismatchExcep
 import tech.theraven.customers_api.exceptions.custom.BasicApplicationException;
 import tech.theraven.customers_api.exceptions.errors.ErrorResponse;
 
+@Slf4j
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
@@ -24,6 +26,7 @@ public class GlobalExceptionHandler {
      */
     @ExceptionHandler(BasicApplicationException.class)
     public ResponseEntity<ErrorResponse> handleCustomException(final BasicApplicationException ex) {
+        log.error(ex.getMessage());
         var response = new ErrorResponse(ex.getMessage());
         return new ResponseEntity<>(response, ex.getHttpStatus());
     }
@@ -42,6 +45,7 @@ public class GlobalExceptionHandler {
             MethodArgumentTypeMismatchException.class})
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ResponseEntity<ErrorResponse> handleBadRequest(final Exception ex) {
+        log.error(ex.getMessage());
         var response = new ErrorResponse(ex.getMessage());
         return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
     }
@@ -57,7 +61,8 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(Exception.class)
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     public ResponseEntity<ErrorResponse> handleServerException(final Exception ex) {
-        ErrorResponse response = new ErrorResponse(ex.getMessage());
+        log.error(ex.getMessage());
+        var response = new ErrorResponse(ex.getMessage());
         return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
