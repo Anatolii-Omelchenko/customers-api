@@ -1,4 +1,4 @@
-INSERT INTO customer (id, created, updated, full_name, email, phone, is_active)
+INSERT INTO customers (id, created, updated, full_name, email, phone, is_active)
 VALUES (1, EXTRACT(EPOCH FROM NOW()), EXTRACT(EPOCH FROM NOW()), 'Ivan Petrov', 'petrov@example.com', '+380501234567', TRUE),
        (2, EXTRACT(EPOCH FROM NOW()), EXTRACT(EPOCH FROM NOW()), 'Maria Ivanova', 'ivanova@example.com', '+380502345678', TRUE),
        (3, EXTRACT(EPOCH FROM NOW()), EXTRACT(EPOCH FROM NOW()), 'Oleksandr Kovalenko','oleksandr.kovalenko@example.com', NULL, TRUE),

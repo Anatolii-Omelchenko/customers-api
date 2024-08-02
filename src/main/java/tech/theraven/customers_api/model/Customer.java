@@ -27,12 +27,13 @@ public class Customer {
     private String fullName;
 
     @Email
-    @Column(name = "email", nullable = false)
+    @Column(name = "email", unique = true, nullable = false)
     private String email;
 
     @Column(name = "phone")
     private String phone;
 
+    @Builder.Default
     @Column(name = "is_active", nullable = false)
     private Boolean isActive = true;
 
