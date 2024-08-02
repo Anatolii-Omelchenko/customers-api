@@ -62,7 +62,11 @@ public class CustomerServiceImpl implements CustomerService {
     @Transactional
     public void delete(Long id) {
         var customerToDelete = getById(id);
-        customerToDelete.setIsActive(false);
+        if (customerToDelete.getIsActive()) {
+            customerToDelete.setIsActive(false);
+        } else {
+            throw new EntityNotFoundException(Customer.class.getSimpleName(), "Id: " + id);
+        }
     }
 
     private Long getCurrentEpochTime() {
