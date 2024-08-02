@@ -6,4 +6,5 @@ import tech.theraven.customers_api.model.Customer;
 
 @Repository
 public interface CustomerRepository extends JpaRepository<Customer, Long> {
+    boolean existsByEmail(String email);
 }

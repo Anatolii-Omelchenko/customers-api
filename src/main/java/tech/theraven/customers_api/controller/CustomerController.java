@@ -1,5 +1,6 @@
 package tech.theraven.customers_api.controller;
 
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -22,7 +23,7 @@ public class CustomerController {
     private final CustomerMapper mapper;
 
     @PostMapping
-    public ResponseEntity<CustomerInfo> createCustomer(@RequestBody CustomerCreateDTO customerCreateDTO) {
+    public ResponseEntity<CustomerInfo> createCustomer(@Valid @RequestBody CustomerCreateDTO customerCreateDTO) {
         var customer = mapper.toCustomer(customerCreateDTO);
         var createdCustomer = customerService.create(customer);
         var customerInfo = mapper.toCustomerInfo(createdCustomer);
@@ -40,7 +41,8 @@ public class CustomerController {
 
     @GetMapping
     public ResponseEntity<List<CustomerInfo>> getCustomers() {
-        var listOfCustomers = customerService.getAllCustomers().stream()
+        var listOfCustomers = customerService.getAllCustomers()
+                .stream()
                 .map(mapper::toCustomerInfo)
                 .toList();
 
@@ -48,8 +50,9 @@ public class CustomerController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<CustomerInfo> updateCustomer(@RequestBody CustomerUpdateDTO customerUpdateDTO,
-                                                       @PathVariable Long id) {
+    public ResponseEntity<CustomerInfo> updateCustomer(
+            @Valid @RequestBody CustomerUpdateDTO customerUpdateDTO,
+            @PathVariable Long id) {
         var customer = mapper.toCustomer(customerUpdateDTO);
         var updatedCustomer = customerService.update(id, customer);
         var customerInfo = mapper.toCustomerInfo(updatedCustomer);

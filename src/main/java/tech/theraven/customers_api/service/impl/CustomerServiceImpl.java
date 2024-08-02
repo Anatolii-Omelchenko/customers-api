@@ -1,9 +1,10 @@
 package tech.theraven.customers_api.service.impl;
 
-import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import tech.theraven.customers_api.exceptions.custom.EntityAlreadyExistsException;
+import tech.theraven.customers_api.exceptions.custom.EntityNotFoundException;
 import tech.theraven.customers_api.model.Customer;
 import tech.theraven.customers_api.repository.CustomerRepository;
 import tech.theraven.customers_api.service.CustomerService;
@@ -23,6 +24,11 @@ public class CustomerServiceImpl implements CustomerService {
     @Override
     @Transactional
     public Customer create(Customer customer) {
+        var customerEmail = customer.getEmail();
+        if (customerRepository.existsByEmail(customerEmail)) {
+            throw new EntityAlreadyExistsException(Customer.class.getSimpleName(), "Email: " + customerEmail);
+        }
+
         customer.setCreated(getCurrentEpochTime());
         customer.setUpdated(getCurrentEpochTime());
 
@@ -32,7 +38,7 @@ public class CustomerServiceImpl implements CustomerService {
     @Override
     public Customer getById(Long id) {
         return customerRepository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException("Customer with id: '" + id + "' not found"));
+                .orElseThrow(() -> new EntityNotFoundException(Customer.class.getSimpleName(), "Id: " + id));
     }
 
     @Override

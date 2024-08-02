@@ -24,4 +24,8 @@ public interface CustomerMapper {
     @Mapping(target = "created", ignore = true)
     @Mapping(target = "updated", ignore = true)
     Customer toCustomer(CustomerUpdateDTO customerUpdateDTO);
+
+    CustomerCreateDTO toCustomerCreateDTO(Customer customer);
+
+    CustomerUpdateDTO toCustomerUpdateDTO(Customer customer);
 }
