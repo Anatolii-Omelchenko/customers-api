@@ -1,0 +1,13 @@
+spring:
+  application:
+    name: customers-api
+  datasource:
+    url: "${DATABASE_URL:jdbc:postgresql://localhost:5432/customers_db}"
+    username: "${DATABASE_USERNAME:postgres}"
+    password: "${DATABASE_PASSWORD:password}"
+  jpa:
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+        format_sql: 'true'
+    show-sql: true
