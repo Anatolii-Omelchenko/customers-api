@@ -52,7 +52,6 @@ public class CustomerServiceImpl implements CustomerService {
         var customerToUpdate = getById(id);
 
         customerToUpdate.setFullName(customer.getFullName());
-        customerToUpdate.setEmail(customer.getEmail());
         customerToUpdate.setPhone(customer.getPhone());
         customerToUpdate.setUpdated(getCurrentEpochTime());
 
