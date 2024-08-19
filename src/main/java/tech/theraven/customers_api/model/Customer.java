@@ -3,9 +3,12 @@ package tech.theraven.customers_api.model;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import lombok.*;
+import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.DynamicUpdate;
+import org.hibernate.annotations.UpdateTimestamp;
 import org.hibernate.proxy.HibernateProxy;
 
+import java.time.Instant;
 import java.util.Objects;
 
 @Builder
@@ -37,11 +40,13 @@ public class Customer {
     @Column(name = "is_active", nullable = false)
     private Boolean isActive = true;
 
+    @CreationTimestamp
     @Column(name = "created", nullable = false)
-    private Long created;
+    private Instant created;
 
+    @UpdateTimestamp
     @Column(name = "updated", nullable = false)
-    private Long updated;
+    private Instant updated;
 
     @Override
     public final boolean equals(Object o) {

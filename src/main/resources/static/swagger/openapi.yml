@@ -141,6 +141,8 @@ paths:
       responses:
         "204":
           description: Customer successfully deactivated
+        "304":
+          $ref: "#/components/responses/NotModified"
         "400":
           $ref: "#/components/responses/BadRequest"
         "404":
@@ -218,6 +220,12 @@ components:
           minimum: 1
 
   responses:
+    NotModified:
+      description: Not modified. The resource remains unchanged.
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/ErrorResponse"
     BadRequest:
       description: Bad request.
       content:

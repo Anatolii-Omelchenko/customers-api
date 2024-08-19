@@ -5,11 +5,11 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import tech.theraven.customers_api.exceptions.custom.EntityAlreadyExistsException;
 import tech.theraven.customers_api.exceptions.custom.EntityNotFoundException;
+import tech.theraven.customers_api.exceptions.custom.FieldUnchangedException;
 import tech.theraven.customers_api.model.Customer;
 import tech.theraven.customers_api.repository.CustomerRepository;
 import tech.theraven.customers_api.service.CustomerService;
 
-import java.time.Instant;
 import java.util.List;
 
 /**
@@ -28,9 +28,6 @@ public class CustomerServiceImpl implements CustomerService {
         if (customerRepository.existsByEmail(customerEmail)) {
             throw new EntityAlreadyExistsException(Customer.class.getSimpleName(), "Email: " + customerEmail);
         }
-
-        customer.setCreated(getCurrentEpochTime());
-        customer.setUpdated(getCurrentEpochTime());
 
         return customerRepository.save(customer);
     }
@@ -53,23 +50,18 @@ public class CustomerServiceImpl implements CustomerService {
 
         customerToUpdate.setFullName(customer.getFullName());
         customerToUpdate.setPhone(customer.getPhone());
-        customerToUpdate.setUpdated(getCurrentEpochTime());
 
         return customerToUpdate;
     }
 
     @Override
     @Transactional
-    public void delete(Long id) {
+    public void deactivate(Long id) {
         var customerToDelete = getById(id);
         if (customerToDelete.getIsActive()) {
             customerToDelete.setIsActive(false);
         } else {
-            throw new EntityNotFoundException(Customer.class.getSimpleName(), "Id: " + id);
+            throw new FieldUnchangedException("Customer is already inactive.");
         }
-    }
-
-    private Long getCurrentEpochTime() {
-        return Instant.now().getEpochSecond();
     }
 }

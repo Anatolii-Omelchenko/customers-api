@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 import tech.theraven.customers_api.exceptions.custom.BasicApplicationException;
-import tech.theraven.customers_api.exceptions.errors.ErrorResponse;
+import tech.theraven.customers_api.exceptions.dto.ErrorResponse;
 
 @Slf4j
 @RestControllerAdvice
