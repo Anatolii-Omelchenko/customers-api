@@ -9,7 +9,6 @@ import tech.theraven.customers_api.model.Customer;
 import tech.theraven.customers_api.repository.CustomerRepository;
 import tech.theraven.customers_api.service.CustomerService;
 
-import java.time.Instant;
 import java.util.List;
 
 /**
@@ -28,9 +27,6 @@ public class CustomerServiceImpl implements CustomerService {
         if (customerRepository.existsByEmail(customerEmail)) {
             throw new EntityAlreadyExistsException(Customer.class.getSimpleName(), "Email: " + customerEmail);
         }
-
-        customer.setCreated(getCurrentEpochTime());
-        customer.setUpdated(getCurrentEpochTime());
 
         return customerRepository.save(customer);
     }
@@ -53,7 +49,6 @@ public class CustomerServiceImpl implements CustomerService {
 
         customerToUpdate.setFullName(customer.getFullName());
         customerToUpdate.setPhone(customer.getPhone());
-        customerToUpdate.setUpdated(getCurrentEpochTime());
 
         return customerToUpdate;
     }
@@ -67,9 +62,5 @@ public class CustomerServiceImpl implements CustomerService {
         } else {
             throw new EntityNotFoundException(Customer.class.getSimpleName(), "Id: " + id);
         }
-    }
-
-    private Long getCurrentEpochTime() {
-        return Instant.now().getEpochSecond();
     }
 }

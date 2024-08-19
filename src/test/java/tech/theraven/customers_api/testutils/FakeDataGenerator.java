@@ -5,6 +5,7 @@ import lombok.Getter;
 import tech.theraven.customers_api.model.Customer;
 import tech.theraven.customers_api.testutils.enums.CustomerFiledName;
 
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -41,8 +42,8 @@ public class FakeDataGenerator {
         private String email = FAKER.internet().emailAddress();
         private String phone = generatePhoneNumber();
         private Boolean isActive = Boolean.TRUE;
-        private Long created = FAKER.date().birthday().getTime();
-        private Long updated = FAKER.date().birthday().getTime();
+        private Instant created = FAKER.date().birthday().toInstant();
+        private Instant updated = FAKER.date().birthday().toInstant();
 
         public CustomerBuilder withInvalid(CustomerFiledName... fields) {
             Arrays.stream(fields)
@@ -84,12 +85,12 @@ public class FakeDataGenerator {
             return this;
         }
 
-        public CustomerBuilder created(Long created) {
+        public CustomerBuilder created(Instant created) {
             this.created = created;
             return this;
         }
 
-        public CustomerBuilder updated(Long updated) {
+        public CustomerBuilder updated(Instant updated) {
             this.updated = updated;
             return this;
         }

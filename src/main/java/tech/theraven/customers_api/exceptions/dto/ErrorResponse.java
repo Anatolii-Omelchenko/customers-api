@@ -1,4 +1,4 @@
-package tech.theraven.customers_api.exceptions.errors;
+package tech.theraven.customers_api.exceptions.dto;
 
 /**
  * Represents an error response containing a message and a timestamp.
