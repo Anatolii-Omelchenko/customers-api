@@ -16,6 +16,7 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import tech.theraven.customers_api.exceptions.custom.EntityAlreadyExistsException;
 import tech.theraven.customers_api.exceptions.custom.EntityNotFoundException;
+import tech.theraven.customers_api.exceptions.custom.FieldUnchangedException;
 import tech.theraven.customers_api.mapper.CustomerMapper;
 import tech.theraven.customers_api.mapper.CustomerMapperImpl;
 import tech.theraven.customers_api.model.Customer;
@@ -377,7 +378,7 @@ class CustomerControllerTest {
                 .andExpect(status().isNoContent());
 
         // Verify
-        verify(customerService).delete(anyLong());
+        verify(customerService).deactivate(anyLong());
     }
 
     @SneakyThrows
@@ -388,12 +389,31 @@ class CustomerControllerTest {
         var customerId = 999L;
 
         doThrow(new EntityNotFoundException(Customer.class.getSimpleName(), "Id: " + customerId))
-                .when(customerService).delete(customerId);
+                .when(customerService).deactivate(customerId);
 
         // Act & Assert
         mockMvc.perform(delete(REQUEST_URI + "/" + customerId)
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isNotFound())
+                .andExpect(content().contentType("application/json"))
+                .andExpect(jsonPath("$.message").exists())
+                .andExpect(jsonPath("$.timestamp").exists());
+    }
+
+    @SneakyThrows
+    @DisplayName("Method deleteCustomer should return 304 when customer is already deactivated")
+    @Test
+    void deleteCustomer_WhenCustomerIsAlreadyDeactivated_ShouldReturnStatusNotModified() {
+        // Prepare
+        var customerId = 999L;
+
+        doThrow(new FieldUnchangedException("Customer is already inactive."))
+                .when(customerService).deactivate(customerId);
+
+        // Act & Assert
+        mockMvc.perform(delete(REQUEST_URI + "/" + customerId)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isNotModified())
                 .andExpect(content().contentType("application/json"))
                 .andExpect(jsonPath("$.message").exists())
                 .andExpect(jsonPath("$.timestamp").exists());
@@ -415,6 +435,6 @@ class CustomerControllerTest {
                 .andExpect(jsonPath("$.timestamp").exists());
 
         // Verify
-        verify(customerService, never()).delete(anyLong());
+        verify(customerService, never()).deactivate(anyLong());
     }
 }

@@ -8,6 +8,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 import tech.theraven.customers_api.exceptions.custom.EntityAlreadyExistsException;
 import tech.theraven.customers_api.exceptions.custom.EntityNotFoundException;
+import tech.theraven.customers_api.exceptions.custom.FieldUnchangedException;
 import tech.theraven.customers_api.testutils.FakeDataGenerator;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -101,12 +102,12 @@ class CustomerServiceTest {
     }
 
     @Test
-    void deleteCustomer() {
+    void deactivateCustomer() {
         // Prepare
         var existingCustomerId = 1L;
 
         // Execute
-        customerService.delete(existingCustomerId);
+        customerService.deactivate(existingCustomerId);
 
         // Assert
         var deactivatedCustomer = customerService.getById(existingCustomerId);
@@ -114,11 +115,23 @@ class CustomerServiceTest {
     }
 
     @Test
-    void deleteCustomerWhenCustomerNotFound() {
+    void deactivateCustomerWhenCustomerNotFound() {
         // Prepare
         var nonExistingCustomerId = 999_999L;
 
         // Assert
-        assertThrows(EntityNotFoundException.class, () -> customerService.delete(nonExistingCustomerId));
+        assertThrows(EntityNotFoundException.class, () -> customerService.deactivate(nonExistingCustomerId));
+    }
+
+    @Test
+    void deactivateCustomerWhenCustomerAlreadyDeactivated() {
+        // Prepare
+        var customerId = 1L;
+
+        // Execute
+        customerService.deactivate(customerId);
+
+        // Assert
+        assertThrows(FieldUnchangedException.class, () -> customerService.deactivate(customerId));
     }
 }

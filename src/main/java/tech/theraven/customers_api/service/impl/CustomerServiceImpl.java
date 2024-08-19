@@ -5,6 +5,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import tech.theraven.customers_api.exceptions.custom.EntityAlreadyExistsException;
 import tech.theraven.customers_api.exceptions.custom.EntityNotFoundException;
+import tech.theraven.customers_api.exceptions.custom.FieldUnchangedException;
 import tech.theraven.customers_api.model.Customer;
 import tech.theraven.customers_api.repository.CustomerRepository;
 import tech.theraven.customers_api.service.CustomerService;
@@ -55,12 +56,12 @@ public class CustomerServiceImpl implements CustomerService {
 
     @Override
     @Transactional
-    public void delete(Long id) {
+    public void deactivate(Long id) {
         var customerToDelete = getById(id);
         if (customerToDelete.getIsActive()) {
             customerToDelete.setIsActive(false);
         } else {
-            throw new EntityNotFoundException(Customer.class.getSimpleName(), "Id: " + id);
+            throw new FieldUnchangedException("Customer is already inactive.");
         }
     }
 }

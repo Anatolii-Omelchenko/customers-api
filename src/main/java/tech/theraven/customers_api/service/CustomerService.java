@@ -1,6 +1,7 @@
 package tech.theraven.customers_api.service;
 
 import jakarta.persistence.EntityNotFoundException;
+import tech.theraven.customers_api.exceptions.custom.FieldUnchangedException;
 import tech.theraven.customers_api.model.Customer;
 
 import java.util.List;
@@ -45,10 +46,12 @@ public interface CustomerService {
     Customer update(Long id, Customer customer) throws EntityNotFoundException;
 
     /**
-     * Deletes a customer by their ID.
+     * Deactivates a customer by their ID.
+     * If the customer is already inactive, a FieldUnchangedException is thrown.
      *
-     * @param id the ID of the customer to delete
+     * @param id the ID of the customer to deactivate
      * @throws EntityNotFoundException if no customer with the specified ID is found
+     * @throws FieldUnchangedException if the customer is already inactive
      */
-    void delete(Long id) throws EntityNotFoundException;
+    void deactivate(Long id) throws EntityNotFoundException, FieldUnchangedException;
 }
